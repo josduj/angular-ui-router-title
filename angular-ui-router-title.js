@@ -24,21 +24,8 @@
                 },
                 $get: ["$state", function ($state) {
                     return {
-                        title: function () { return getTitleValue($state.$current.locals.globals["$title"]); },
-                        breadCrumbs: function () {
-                            var $breadcrumbs = [];
-                            var state = $state.$current;
-                            while (state) {
-                                if (state["resolve"] && state["resolve"].$title) {
-                                    $breadcrumbs.unshift({
-                                        title: getTitleValue(state.locals.globals["$title"]),
-                                        state: state["self"].name,
-                                        stateParams: state.locals.globals["$stateParams"]
-                                    });
-                                }
-                                state = state["parent"];
-                            }
-                            return $breadcrumbs;
+                        title: function () {
+                            return getTitleValue($state.$current.locals.globals["$title"]);
                         }
                     };
                 }]
@@ -48,11 +35,9 @@
             $rootScope.$on("$stateChangeSuccess", function () {
                 var title = $title.title();
                 $timeout(function () {
-                    $rootScope.$title = title;
                     var documentTitle = documentTitleCallback ? $injector.invoke(documentTitleCallback) : title || defaultDocumentTitle;
                     document.title = documentTitle;
                 });
-                $rootScope.$breadcrumbs = $title.breadCrumbs();
             });
         }]);
 

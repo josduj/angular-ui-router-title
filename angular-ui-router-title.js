@@ -31,18 +31,20 @@
                 }]
             };
         })
-        .run(["$rootScope", "$timeout", "$title", "$injector", function ($rootScope, $timeout, $title, $injector) {
-            $rootScope.$on("$stateChangeSuccess", function () {
-                var title = $title.title();
-                $timeout(function () {
-                    var documentTitle = documentTitleCallback ? $injector.invoke(documentTitleCallback) : title || defaultDocumentTitle;
+        .run(["$transitions", "$injector", function ($transitions, $injector) {
+            $transitions.onStart({}, function (trans) {
+                trans.promise.finally( function () {
+                    var title = getTitleValue(trans.injector().get('$title'));
+                    var documentTitle = documentTitleCallback
+                        ? $injector.invoke(documentTitleCallback, null, {title: title})
+                        : title || defaultDocumentTitle;
                     document.title = documentTitle;
                 });
             });
         }]);
 
     function getTitleValue(title) {
-        return angular.isFunction(title) ? title() : title;
+        return angular.isObject(title) ? undefined : title;
     }
 
 })(window.angular);

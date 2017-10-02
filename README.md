@@ -1,9 +1,9 @@
 angular-ui-router-title
 =========================
 
-[![Build Status](https://travis-ci.org/nonplus/angular-ui-router-title.svg?branch=master)](https://travis-ci.org/nonplus/angular-ui-router-title)
-
 AngularJS module for updating browser title/history based on the current ui-router state.
+
+This is fork of [nonplus/angular-ui-router-title](https://github.com/nonplus/angular-ui-router-title) with modifications to make it work with ui-router 1.0+.
 
 
 Motivation
@@ -13,26 +13,16 @@ Using ui-router states with `url` configurations enables browser history support
 It is important that the title in the browser history/bookmark represent the application state so that the user can tell
 where she's navigating to.
 
-The module provides a `$title` variable on the `$rootScope` that is populated based on the `$title` value resolved
-in `$state.$current` (or one of its parent states).  If the current state doesn't resolve a `$title`,
-then `$rootScope.$title` will be `undefined`.
-
-The module also provides a `$breadcrumbs` array that is populated based on the `$title` of `$state.$current` and its parent states.
-
 The module sets the `document.title` to the value of the `$title` variable or, if configured, to the value returned by a `documentTitle(title)` callback.
 The browser sets bookmark and browser history text based on the `document.title`.
 
 
 Installing the Module
 ---------------------
-Installation can be done through bower:
-``` shell
-bower install angular-ui-router-title
-```
 
 In your page add:
 ```html
-  <script src="bower_components/angular-ui-router-title/angular-ui-router-title.js"></script>
+  <script src="angular-ui-router-title.js"></script>
 ```
 
 
@@ -116,15 +106,14 @@ $stateProvider
 Configuring a custom document.title
 -----------------------------------
 
-By default, the module will set the `document.title` to the value of `$rootScope.$title`.  A common convention is to include
-the application name in the document.title.  Customization of the `document.title` can be achieved via the `$titleProvier.documentTitle`
+Customization of the `document.title` can be achieved via the `$titleProvier.documentTitle`
 callback specification.
 
 ```javascript
 angular.module('myApp', ['ng', 'ui.router.title'])
   .config(function($titleProvider) {
-    $titleProvider.documentTitle(function($rootScope) {
-      return $rootScope.$title ? $rootScope.$title + " - My Application" : "My Application";
+    $titleProvider.documentTitle(function(title) {
+      return title ? title + " - My Application" : "My Application";
     });
   });
 ```
@@ -133,29 +122,10 @@ angular.module('myApp', ['ng', 'ui.router.title'])
 Using the $title in a header
 ----------------------------
 
-The `$title` property contains the resolve title and cen be used, for example, to set the contents of an `<h1>` tag.
+The `$title` property contains the resolve title and can be used, for example, to set the contents of an `<h1>` tag.
 
 ```html
   <h1 ng-bind="($title || 'Home') + ' - My Application'">My Application</h1>
-```
-
-
-Using the $breadcrumbs
-----------------------
-
-The `$breadcrumbs` array contains objects, one for each state that resolves a `$title` value.  Each entry contains:
-
-  * `title`: $title value of this state
-  * `state`: name of the state
-  * `stateParams`: $stateParams of the state.
-
-```html
-<ol class="breadcrumb">
-	<li ng-repeat="crumb in $breadcrumbs" ng-class="{ 'active' : $last }">
-		<a ng-if="!$last" href="{{$state.href(crumb.state, crumb.stateParams)}}">{{crumb.title}}</a>
-		<span ng-if="$last">{{crumb.title}}</span>
-	</li>
-</ol>
 ```
 
 

@@ -1,7 +1,7 @@
 /**
  * AngularJS module for updating browser title/history based on the current ui-router state.
  *
- * @link https://github.com/nonplus/angular-ui-router-title
+ * @link https://github.com/josduj/angular-ui-router-title
  *
  * @license angular-ui-router-title v0.1.1
  * (c) Copyright Stepan Riha <github@nonplus.net>
@@ -33,7 +33,7 @@
         })
         .run(["$transitions", "$injector", function ($transitions, $injector) {
             $transitions.onStart({}, function (trans) {
-                trans.promise.finally( function () {
+                trans.promise.finally(function () {
                     var title = getTitleValue(trans.injector().get('$title'));
                     var documentTitle = documentTitleCallback
                         ? $injector.invoke(documentTitleCallback, null, {title: title})
